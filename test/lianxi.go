@@ -2,6 +2,9 @@ package main
 
 import (
 	"fmt"
+	"math/rand"
+	"time"
+
 	//"math/rand"
 	//"time"
 	"errors"
@@ -21,7 +24,7 @@ func main() {
 	//	go fmt.Println(i)
 	//}
 	//time.Sleep(time.Second)
-	//数组替换
+	//**********************数组替换**********
 	//mySlice := []string{"I", "am", "stupid", "and", "weak"}
 	//
 	//for index, _ := range mySlice {
@@ -41,33 +44,33 @@ func main() {
 	//}()
 	//<- ch
 	//	********************遍历通道缓冲区******************
-	//ch := make(chan int,2)
-	//ch1 :=make(chan int,2)
-	//go func() {
-	//	for i := 0; i < 10; i++ {
-	//		//纳秒级随机种子,生成随机数
-	//		rand.Seed(time.Now().UnixNano())
-	//		n := rand.Intn(1000)
-	//		fmt.Println("putting", n)
-	//		ch <- n
-	//	}
-	//	//告诉接受者没有新数据
-	//	close(ch)
-	//}()
-	//go func() {
-	//	for i := 0; i < 10; i++ {
-	//		//纳秒级随机种子,生成随机数
-	//		rand.Seed(time.Now().UnixNano())
-	//		n := rand.Intn(1000)
-	//		fmt.Println("putting", n)
-	//		ch1 <- n
-	//	}
-	//	//告诉接受者没有新数据
-	//	close(ch)
-	//}()
-	//fmt.Println("Hello form main")
-	//for v :=range ch{
-	//	fmt.Println("receiving",v)
-	//}
+	ch := make(chan int, 2)
+	ch1 := make(chan int, 2)
+	go func() {
+		for i := 0; i < 10; i++ {
+			//纳秒级随机种子,生成随机数
+			rand.Seed(time.Now().UnixNano())
+			n := rand.Intn(1000)
+			fmt.Println("putting", n)
+			ch <- n
+		}
+		//告诉接受者没有新数据
+		close(ch)
+	}()
+	go func() {
+		for i := 0; i < 10; i++ {
+			//纳秒级随机种子,生成随机数
+			rand.Seed(time.Now().UnixNano())
+			n := rand.Intn(1000)
+			fmt.Println("putting", n)
+			ch1 <- n
+		}
+		//告诉接受者没有新数据
+		close(ch)
+	}()
+	fmt.Println("Hello form main")
+	for v := range ch {
+		fmt.Println("receiving", v)
+	}
 
 }
