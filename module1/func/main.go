@@ -16,9 +16,9 @@ func main() {
 	//}
 	fmt.Println("Hello World")
 
-	fmt.Println(passValue(3, 4, 5))
+	fmt.Println(passValue(3, 4))
 }
-func passValue(a int, b ...int) (x, y int) {
+func passValue(a int, b int) (x, y int) {
 	x = a
 	y = b
 	return x, y

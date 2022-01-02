@@ -10,13 +10,12 @@ func fibona() func(int) int {
 		}
 		return i
 	}
-
 }
 func main() {
 	fibonaa := fibona()
 	for i := 0; i < 10; i++ {
 		fmt.Println(fibonaa(i))
-		//fmt.Println("i=", i, "num=", fibonaa(i))
+		fmt.Println("i=", i, "num=", fibonaa(i))
 	}
 
 }
