@@ -18,7 +18,7 @@ const (
 	Delete  = "DELETE"
 )
 
-//定义函数
+//定义方法
 type Handle func(ctx *Context)
 
 //定义路由结构体
@@ -34,7 +34,7 @@ type Context struct {
 	result  string
 }
 
-//定义方法
+//定义状态方法
 func (c *Context) Status(status int) {
 	c.status = status
 }
@@ -152,6 +152,7 @@ func (R *Router) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+//路由函数
 func NewRouter() *Router {
 	return new(Router)
 }
@@ -186,4 +187,5 @@ func (R *Router) Run() {
 
 func (R *Router) Group(s string) *Router {
 	return R
+
 }
