@@ -1,6 +1,11 @@
-FROM golang:1.17-alpine AS build
-WORKDIR /golang/keng-golang/homework/3.1_docker
-#LABEL multi.label1="value1" multi.label2="value2" other="value3"
-COPY /golang/keng-golang/ /httpserver
-EXPOSE 80
-ENTRYPOINT ["/httpserver"]
+FROM golang:1.17 AS builder
+ENV GO111MODULE=off \
+	CGO_ENABLED=0 \
+	GOOS=linux \
+	GOARCH=amd64
+WORKDIR /build
+COPY . .
+RUN go build -o httpserver .
+FROM scratch
+COPY --from=builder /build/httpserver /
+EXPOSE 8080ENTRYPOINT ["/httpserver"]

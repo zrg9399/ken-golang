@@ -46,6 +46,7 @@ func rootHandler(w http.ResponseWriter, r *http.Request) {
 	os.Setenv("VERSION", "1.7.3.5")
 	w.Header().Get("VERSION")
 	fmt.Println("VERSION is:", os.Getenv("VERSION"))
+
 	io.WriteString(w, "VERSION is:"+os.Getenv("VERSION"))
 	//记录客户端ip,http返回码、输出到server端的标准输出
 	log.Println("/ ClientAddress is " + getCurrentIP(r) + " Status Code is " + http.StatusText(200))
