@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:  
+  name: httpserver  
+  labels:    
+    app: httpserver
+spec:  
+  replicas: 1  
+  selector:    
+    matchLabels:      
+      app: httpserver  
+  template:    
+    metadata:      
+      labels:        
+        app: httpserver    
+    spec:      
+      imagePullSecrets:      
+        - name: cloudnative
+      containers:      
+        - name: httpserver        
+          image: https://hub.docker.com/zrg9399/golang:v1        
+          ports:        
+            - containerPort: 8080
