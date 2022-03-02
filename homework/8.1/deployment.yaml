@@ -4,6 +4,13 @@ metadata:
   name: httpserver  
   labels:    
     app: httpserver
+livenessProbe:  
+exec:    
+  command:    
+    - cat    
+    - /tmp/healthy  
+initialDelaySeconds: 5  
+periodSeconds: 5
 spec:  
   replicas: 1  
   selector:    
