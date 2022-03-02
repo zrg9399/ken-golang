@@ -1,30 +1,60 @@
 apiVersion: apps/v1
 kind: Deployment
-metadata:  
-  name: httpserver  
-  labels:    
+metadata:
+  labels:
     app: httpserver
-livenessProbe:  
-exec:    
-  command:    
-    - cat    
-    - /tmp/healthy  
-initialDelaySeconds: 5  
-periodSeconds: 5
-spec:  
-  replicas: 1  
-  selector:    
-    matchLabels:      
-      app: httpserver  
+      name: httpserver
+spec:
+  progressDeadlineSeconds: 600
+  replicas: 2  
+  revisionHistoryLimit: 10
+  selector:
+    matchLabels:
+        app: httpserver
+  strategy:    
+	rollingUpdate:
+	    maxSurge: 25%
+		maxUnavailable: 25%
+	type: RollingUpdate
   template:    
-    metadata:      
-      labels:        
-        app: httpserver    
-    spec:      
-      imagePullSecrets:      
-        - name: cloudnative
-      containers:      
-        - name: httpserver        
-          image: https://hub.docker.com/zrg9399/golang:v1        
-          ports:        
-            - containerPort: 8080
+	metadata:
+	    creationTimestamp: null      
+		labels:        
+			app: httpserver    
+		spec:      
+			containers:        
+			     - env:            
+			       - name: httpport
+                      valueFrom:                
+                        configMapKeyRef:
+                        key: httpport                  
+                        name: myenv          
+               image: https://hub.docker.com/zrg9399/golang:v1 
+               imagePullPolicy: IfNotPresent          
+            livenessProbe:            
+            	failureThreshold: 3            
+            	httpGet:              
+            		path: /healthz              
+            		port: 8080              
+            		scheme: HTTP            
+            	initialDelaySeconds: 5            
+            	periodSeconds: 10            
+            	successThreshold: 1            
+            	timeoutSeconds: 1          
+            name: httpserver                  
+            resources:            
+            	limits:              
+            		cpu: 200m              
+            		memory: 100Mi            
+            	requests:              
+            		cpu: 20m              
+            		memory: 20Mi          
+            terminationMessagePath: /dev/termination-log          
+            terminationMessagePolicy: File
+    dnsPolicy: ClusterFirst      
+    imagePullSecrets:        
+    	- name: cloudnative      
+    restartPolicy: Always      
+    schedulerName: default-scheduler      
+    securityContext: {}      
+    terminationGracePeriodSeconds: 30
