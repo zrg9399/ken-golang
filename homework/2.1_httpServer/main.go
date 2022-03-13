@@ -6,17 +6,22 @@ import (
 	"github.com/golang/glog"
 	"io"
 	"log"
+	"math/rand"
 	"net/http"
 	"os"
+	"runtime/metrics"
 	"strings"
+	"time"
 )
 
 func main() {
+	metrics.Register()
 	flag.Set("v", "4")
 	glog.V(2).Info("Starting http server...")
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", rootHandler)
 	mux.HandleFunc("/healthz", healthz)
+	mux.Handle("/metrics", promhttp.Handler())
 	err := http.ListenAndServe(":8081", mux)
 	if err != nil {
 		log.Fatal(err)
@@ -60,4 +65,11 @@ func getCurrentIP(r *http.Request) string {
 		ip = strings.Split(r.RemoteAddr, ":")[0]
 	}
 	return ip
+}
+func images(w http.ResponseWriter, r *http.Request) {
+	timer := metrics.NewTimer()
+	defer timer.ObserveTotal()
+	randInt := rand.Intn(2000)
+	time.Sleep(time.Millisecond * time.Duration(randInt))
+	w.Write([]byte(fmt.Sprintf("<h1>%d<h1>", randInt)))
 }
