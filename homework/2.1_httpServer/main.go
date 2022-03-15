@@ -21,6 +21,7 @@ func main() {
 	mux := http.NewServeMux()
 	mux.HandleFunc("/", rootHandler)
 	mux.HandleFunc("/healthz", healthz)
+	mux.HandleFunc("/images", images)
 	mux.Handle("/metrics", promhttp.Handler())
 	err := http.ListenAndServe(":8081", mux)
 	if err != nil {
